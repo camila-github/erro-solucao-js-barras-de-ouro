@@ -63,7 +63,7 @@ Exemplos de Entrada  | Exemplos de Saída
 
     /*.match(/\d+/g) -  separa cada string para armazenar em um array*/
     /*.map(v => parseInt(v)) - cada string separado é convertido em numero, 
-    depois é armazenado em um array array */
+    depois é armazenado em um array*/
     impostoPagar = gets().match(/\d+/g).map(impPagar => parseInt(impPagar));
 
     /*é adicionado um espaço no inicio do array*/
