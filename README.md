@@ -25,12 +25,12 @@ Seu programa deve produzir uma única linha com um inteiro representando a menor
 Exemplos de Entrada  | Exemplos de Saída
 ------------- | -------------
 6 10 | 44
-0 10 10 10 10 10 | -
-1 4 7 | -
-5 1 2 | -
-3 5 3 | -
-2 5 2 | -
-6 5 2 | -
+0 10 10 10 10 10 | 
+1 4 7 | 
+5 1 2 | 
+3 5 3 | 
+2 5 2 | 
+6 5 2 | 
 
 
 Exemplos de Entrada  | Exemplos de Saída
@@ -51,7 +51,7 @@ Exemplos de Entrada  | Exemplos de Saída
 
 
 ```javascript
-//SOLUÇAO 1
+//SOLUCAO 1
 /*Utilizado funçao anônima*/
 (function calcularDistancia(entradaPrimeiralinha) {
 
