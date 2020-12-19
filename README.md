@@ -51,7 +51,7 @@ Exemplos de Entrada  | Exemplos de Saída
 
 
 #### Link Referência:
-https://github.com/trepichio/DIOBootcampNodejs-Desafios/blob/master/05-Solu%C3%A7%C3%A3o%20de%20Problemas%20com%20JavaScript/Desafio-07.js.
+(https://github.com/trepichio/DIOBootcampNodejs-Desafios/blob/master/05-Solu%C3%A7%C3%A3o%20de%20Problemas%20com%20JavaScript/Desafio-07.js)
 
 Spread operator(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Operators/Spread_operator).
 
@@ -59,7 +59,8 @@ Funções Anônimas(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guid
 
 Destructuring Assignment(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Operators/Atribuicao_via_desestruturacao).
 
-Math.ceil()(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil)
+Math.ceil()(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil).
+
 
 
 ```javascript
