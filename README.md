@@ -1,7 +1,7 @@
-## Treinamento Digital Innovation One - Exercicio - Barras de Ouro
+## Exercicio - Barras de Ouro
 
-O exercicio publicado é referente ao treinamento do BOOTCAMP - Desenvolvedor NodeJS -  Solução de problemas com JavaScript.
-(https://digitalinnovation.one)
+O exercicio publicado é referente ao treinamento do BOOTCAMP - Desenvolvedor NodeJS -  Solução de problemas com JavaScript.(https://digitalinnovation.one)
+
 
 #### Descrição do Desafio:
 
@@ -18,6 +18,7 @@ José como é o Rei, contratou o seu time para, dados a quantidade de ouro a ser
 
 A primeira linha contém dois inteiros N e C indicando respectivamente o número de cidades e a capacidade de carga da carruagem (2 ≤ N ≤ 104 e 1 ≤ C ≤ 100). O feudo principal é identificado pelo número 1 e os outros feudos são identificadas por inteiros de 2 a N . A segunda linha contém N inteiros Ei representando a quantidade de imposto devido por cada feudo i (0 ≤ Ei ≤ 100 para 1 ≤ i ≤ N ). Cada uma das N-1 linhas seguintes contém três inteiros A , B e C , indicando que uma estrada liga o feudo A e o feudo B (1 ≤ A, B ≤ N ) e tem comprimento C (1 ≤ C ≤ 100).
 
+
 #### Saída:
 
 Seu programa deve produzir uma única linha com um inteiro representando a menor distância que a carruagem real deve percorrer para recolher todo o imposto devido, em km.
@@ -31,7 +32,6 @@ Exemplos de Entrada  | Exemplos de Saída
 3 5 3 | 
 2 5 2 | 
 6 5 2 | 
-
 
 Exemplos de Entrada  | Exemplos de Saída
 ------------- | -------------
@@ -62,69 +62,165 @@ Destructuring Assignment(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript
 Math.ceil()(https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil).
 
 
+#### Update: 
+16-03-2021 Criado funções utilizando constantes (const). Criado funções com uma a duas funcionalidades. Ajustado nomenclatura das constantes e variaveis (Uso de conceitos CleanCode).
+
 
 ```javascript
 //SOLUCAO 1
+/*DECLARACAO DAS VARIAVEIS E CONSTANTES*/
+let numCidades;
+let capacidadeDeCarga;
+let impostoPagar;
+let trajetos;
+let somatoriaTrajetos = [];
+let auxSomatoriaTrajetos = [];
+let ligacaoEntreCidadeFeudo = 1;
+let cidadesVisitados = []; 
+let trajetosPercorridos = [];
+let menorDistancia = 0;
+const regexSepararStrings = /\d+/g ;
+
+/*IMPRIME RESULTADO*/
+const saidaDados = () => console.log(menorDistancia);
+
+/*ENTRADA DADOS - (NUMERO DE CIDADES + CAPACIDADE DE CARGA)*/
+/*Primeira linha da entrada, referente o 'numero de cidades' e 'capacidade da carga', armazenado em array*/
+const getNumCidadesCapacidadeCarga = (getsLocal) => {
+  /* if() - Verifica se a entrada da primeira linha é um valor valido*/
+  if (!getsLocal) return false;
+  /*.match(/\d+/g) -  separa cada string para armazenar em um array de atribuição via 
+  desestruturação (destructuring assignment), o 'numero de Cidades' e 'Capacidade de Carga'*/
+  [numCidades, capacidadeDeCarga] = getsLocal.match(regexSepararStrings);
+}
+
+/*ENTRADA DADOS - IMPOSTO A PAGAR*/
+/*Segunda linha da entrada, referente o imposto a pagar, armazenado em array*/
+const getImpostoPagar = () => {
+  /*.match(/\d+/g) -  separa cada string para armazenar em um array*/
+  /*.map(v => parseInt(v)) - cada string é convertido em numero, depois é armazenado em um array */
+  impostoPagar = gets().match(regexSepararStrings).map(impPagar => parseInt(impPagar)); 
+  /*é adicionado um espaço no inicio do array*/
+  impostoPagar.unshift('');
+}  
+
+/*ENTRADA DADOS - REFERENTE A DISTANCIA (DE + PARA + DISTANCIA)*/
+/*Demais linhas de entradas, armazenada em array, referente a distancia*/
+const getDistanciaDasCidades= () => {
+  trajetos = Array.from(new Array(1 * numCidades + 1), numCid => []);
+  /*Armazena os valores referente a distancia (de + para + distancia), em um array de objetos*/
+  while (numCidades-- > 1) {
+    /*.match(/\d+/g) -  separa cada string para armazenar em um array de objeto,
+    de atribuição via desestruturação (destructuring assignment) */
+    let [de, para, distancia] = gets().match(regexSepararStrings);
+    trajetos[de].push({ para: para, distancia: distancia});
+    trajetos[para].push({ para: de, distancia: distancia});
+  }
+}
+
+/*VERIFICA A MENOR DISTANCIA*/
+const verificarMenorDistancia = () => {
+  somatoriaTrajetos = [...somatoriaTrajetos, ligacaoEntreCidadeFeudo];
+  /*Verifica os menores trajetos*/
+  while (somatoriaTrajetos.length > 0) {
+    let t = somatoriaTrajetos.pop();
+    if (t !== 1) auxSomatoriaTrajetos = [...auxSomatoriaTrajetos, t];
+  
+    for (const trajeto of trajetos[t]) {
+      if (cidadesVisitados[trajeto.para]) continue;
+      cidadesVisitados[t] = true;
+      trajetosPercorridos[trajeto.para] = t;
+      somatoriaTrajetos = [...somatoriaTrajetos, trajeto.para];
+    }
+  }
+}
+
+/*CALCULO DA DISTACIA PERCORRIDA*/
+const calcularDistanciaPercorrida = () => {
+  /*Loop para calcular a distancia do trajeto*/
+  while (auxSomatoriaTrajetos.length > 0) {
+    let x = auxSomatoriaTrajetos.pop();
+    for (let index = 0; index < trajetos[trajetosPercorridos[x]].length; index++) {
+      const trajeto = trajetos[trajetosPercorridos[x]][index];
+      if (trajeto.para === x) { 
+        d = trajeto.distancia; 
+        break; 
+      }
+    }
+    menorDistancia += Math.ceil(parseFloat(Number(impostoPagar[x])) / Number(capacidadeDeCarga)) * Math.ceil((2 * Number(d)));
+    impostoPagar[trajetosPercorridos[x]] += impostoPagar[x];
+  }
+}
+
+(function inicio(getsLocal){
+  getNumCidadesCapacidadeCarga(getsLocal);
+  getImpostoPagar();
+  getDistanciaDasCidades();
+  verificarMenorDistancia();
+  calcularDistanciaPercorrida()
+  saidaDados();
+})(gets());
+
+
+
+//SOLUÇAO 2
 /*Utilizado funçao anônima*/
 (function calcularDistancia(entradaPrimeiralinha) {
 
-    /*SEPARAÇAO PRIMEIRA LINHA DE ENTRADA EM UM ARRAY (NUMERO DE CIDADES + CAPACIDADE DE CARGA)*/
-    /* if() - Verifica se a entrada da primeira linha é um valor valido*/
-    /*.match(/\d+/g) -  separa cada string para armazenar em um array de atribuição via 
-    desestruturação (destructuring assignment), o 'numero de Cidades' e 'Capacidade de Carga'*/
-    if (!([numCidades, capacidadeDeCarga] = entradaPrimeiralinha.match(/\d+/g))) return false;
+  /*SEPARAÇAO PRIMEIRA LINHA DE ENTRADA EM UM ARRAY (NUMERO DE CIDADES + CAPACIDADE DE CARGA)*/
+  /* if() - Verifica se a entrada da primeira linha é um valor valido*/
+  /*.match(/\d+/g) -  separa cada string para armazenar em um array de atribuição via 
+  desestruturação (destructuring assignment), o 'numero de Cidades' e 'Capacidade de Carga'*/
+  if (!([numCidades, capacidadeDeCarga] = entradaPrimeiralinha.match(/\d+/g))) return false;
+  /*.match(/\d+/g) -  separa cada string para armazenar em um array*/
+  /*.map(v => parseInt(v)) - cada string separado é convertido em numero, 
+  depois é armazenado em um array*/
+  impostoPagar = gets().match(/\d+/g).map(impPagar => parseInt(impPagar));
+  /*é adicionado um espaço no inicio do array*/
+  impostoPagar.unshift('');
 
-    /*.match(/\d+/g) -  separa cada string para armazenar em um array*/
-    /*.map(v => parseInt(v)) - cada string separado é convertido em numero, 
-    depois é armazenado em um array*/
-    impostoPagar = gets().match(/\d+/g).map(impPagar => parseInt(impPagar));
+  /*SEPARAÇAO DAS DEMAIS LINHAS DE ENTRADA EM ARRAY REFERENTE A DISTANCIA (DE + PARA + DISTANCIA)*/
+  cidadesVisitados = [];
+  trajetosPercorridos = [];
+  trajetos = Array.from(new Array(1 * numCidades + 1), numCid => []);
+  /*Armazena os valores referente a distancia (de + para + distancia), em um array de objetos*/
+  while (numCidades-- > 1) {
+      /*.match(/\d+/g) -  separa cada string para armazenar em um array de objeto,
+      de atribuição via desestruturação (destructuring assignment) */
+      let [de, para, distancia] = gets().match(/\d+/g);
+      trajetos[de].push({ para: para, distancia: distancia });
+      trajetos[para].push({ para: de, distancia: distancia });
+  }
 
-    /*é adicionado um espaço no inicio do array*/
-    impostoPagar.unshift('');
+  /*VERIFICA OS MENORES TRAJETOS*/
+  ligacaoEntreCidadeFeudo = 1;
+  somatoriaTrajetos = [];
+  auxSomatoriaTrajetos = [];
+  somatoriaTrajetos = [...somatoriaTrajetos, ligacaoEntreCidadeFeudo];
+  while (somatoriaTrajetos.length > 0) {
+      if ((t = somatoriaTrajetos.pop()) !== 1) auxSomatoriaTrajetos = [...auxSomatoriaTrajetos, t];
+      for (const trajeto of trajetos[t]) {
+          if (cidadesVisitados[trajeto.para]) continue;
+          cidadesVisitados[t] = true;
+          trajetosPercorridos[trajeto.para] = t;
+          somatoriaTrajetos = [...somatoriaTrajetos, trajeto.para];
+      }
+  }
 
-    /*SEPARAÇAO DAS DEMAIS LINHAS DE ENTRADA EM ARRAY REFERENTE A DISTANCIA (DE + PARA + DISTANCIA)*/
-    cidadesVisitados = [];
-    trajetosPercorridos = [];
-    trajetos = Array.from(new Array(1 * numCidades + 1), numCid => []);
-    /*Armazena os valores referente a distancia (de + para + distancia), em um array de objetos*/
-    while (numCidades-- > 1) {
-        /*.match(/\d+/g) -  separa cada string para armazenar em um array de objeto,
-        de atribuição via desestruturação (destructuring assignment) */
-        let [de, para, distancia] = gets().match(/\d+/g);
-        trajetos[de].push({ para: para, distancia: distancia });
-        trajetos[para].push({ para: de, distancia: distancia });
-    }
-
-    /*VERIFICA AS MENORES DISTANCIA*/
-    ligacaoEntreCidadeFeudo = 1;
-    somatoriaTrajetos = [];
-    auxSomatoriaTrajetos = [];
-    somatoriaTrajetos = [...somatoriaTrajetos, ligacaoEntreCidadeFeudo];
-    /*Verifica os menores trajetos*/
-    while (somatoriaTrajetos.length > 0) {
-        if ((t = somatoriaTrajetos.pop()) !== 1) auxSomatoriaTrajetos = [...auxSomatoriaTrajetos, t];
-        for (const trajeto of trajetos[t]) {
-            if (cidadesVisitados[trajeto.para]) continue;
-            cidadesVisitados[t] = true;
-            trajetosPercorridos[trajeto.para] = t;
-            somatoriaTrajetos = [...somatoriaTrajetos, trajeto.para];
-        }
-    }
-
-    /*CALCULO DA DISTACIA PERCORRIDA*/
-    menorDistancia = 0;
-    /*Loop para calcular a distancia do trajeto*/
-    while (auxSomatoriaTrajetos.length > 0) {
-        let x = auxSomatoriaTrajetos.pop();
-        for (let index = 0; index < trajetos[trajetosPercorridos[x]].length; index++) {
-            const trajeto = trajetos[trajetosPercorridos[x]][index];
-            if (trajeto.para === x) { d = trajeto.distancia; break; }
-        }
-        /*Calcula a distancia*/
-        menorDistancia += Math.ceil(parseFloat(Number(impostoPagar[x])) / Number(capacidadeDeCarga)) * Math.ceil((2 * Number(d)));
-        impostoPagar[trajetosPercorridos[x]] += impostoPagar[x];
-    }
-    console.log(menorDistancia);
+  /*CALCULO DA DISTACIA PERCORRIDA*/
+  menorDistancia = 0;
+  /*Loop para calcular a distancia do trajeto*/
+  while (auxSomatoriaTrajetos.length > 0) {
+      let x = auxSomatoriaTrajetos.pop();
+      for (let index = 0; index < trajetos[trajetosPercorridos[x]].length; index++) {
+          const trajeto = trajetos[trajetosPercorridos[x]][index];
+          if (trajeto.para === x) { d = trajeto.distancia; break; }
+      }
+      /*Calcula a distancia*/
+      menorDistancia += Math.ceil(parseFloat(Number(impostoPagar[x])) / Number(capacidadeDeCarga)) * Math.ceil((2 * Number(d)));
+      impostoPagar[trajetosPercorridos[x]] += impostoPagar[x];
+  }
+  console.log(menorDistancia);
 
 })(gets());
 ```
